@@ -11,9 +11,9 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const { get } = require("http");
 
-const myManagerInfo = {};
-const myEngineerInfo = {};
-const myInternInfo = {};
+let myManagerInfo = {};
+let myEngineerInfo = {};
+let myInternInfo = {};
 
 async function heavyLoad() {
 
@@ -161,11 +161,12 @@ async function heavyLoad() {
         })
     }
 
-
     async function getSome() {
         askQuestions();
     }
     getSome();
+
+    
 }
 
     
