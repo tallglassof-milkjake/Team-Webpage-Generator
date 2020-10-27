@@ -9,117 +9,169 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { get } = require("http");
 
-async function getInfo() {
-    inquirer.prompt([
-        {
-            type: "list",
-            message: "Is there a manager for this team?",
-            name: "role",
-            choices: [
-                "Yes",
-                "No",
-            ]
-        },
-        {
-            type: "input",
-            name: "managerName",
-            message: "What is the managers name?"
-        },
-        {
-            type: "input",
-            name: "managerID",
-            message: "What is your ID?"
-        },
-        {
-            type: "input",
-            name: "managerEmail",
-            message: "What is your email address?"
-        },
-        {
-            type: "input",
-            name: "officeNumber",
-            message: "What is your office number?"
-        },
+const myManagerInfo = {};
+const myEngineerInfo = {};
+const myInternInfo = {};
 
-        {
-            type: "list",
-            message: "Are there any more employees to consider?",
-            name: "getEmployee",
-            choices: [
-                "Yes",
-                "No"
-            ]
-        },
-    ]).then(function promptEmployee(info) {
+async function heavyLoad() {
 
-        const manager = info;
 
-        console.log(manager);
 
-        if (manager.getEmployee == "Yes") {
-            inquirer.prompt([
-                {
-                    type: "input",
-                    name: "employeeName",
-                    message: "What is the name?"
-                },
-                {
-                    type: "input",
-                    name: "employeeID",
-                    message: "What is your employee ID?"
-                },
-                {
-                    type: "input",
-                    name: "employeeEmail",
-                    message: "What is your Email address?",
-                },
-                {
-                    type: "input",
-                    name: "employeeGithub",
-                    message: "What is your Github username?"
-                },
-                {
-                    type: "list",
-                    message: "Are there any more employees to consider?",
-                    name: "getEmployee",
-                    choices: [
-                        "Yes",
-                        "No"
-                    ]
-                }
-            ]);
-        }
-        
-    });
+    // Initial prompt (Which team member)
+    function askQuestions() {
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "Select employee",
+                name: "role",
+                choices: [
+                    "Manager",
+                    "Engineer",
+                    "Intern"
+                ]
+            }
+        ]).then(async function selectRole(data) {
+            if (data.role === "Manager") {
+                manager();
+            } else if (data.role === "Engineer") {
+                engineer();
+            } else if (data.role === "Intern") {
+                intern();
+            }
+        });
+    }
+
+    // Prompt asking if more employees
+    function nextQuestion() {
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "Select employee",
+                name: "role",
+                choices: [
+                    "Manager",
+                    "Engineer",
+                    "Intern",
+                    "That is all"
+                ]
+            }
+        ]).then(async function selectRole(data) {
+            if (data.role === "Manager") {
+                manager();
+            } else if (data.role === "Engineer") {
+                engineer();
+            } else if (data.role === "Intern") {
+                intern();
+            }
+        });
+    }
+    
+    // Manager Questions
+    async function manager() {
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "managerName",
+                message: "What is the managers name?"
+            },
+            {
+                type: "input",
+                name: "managerID",
+                message: "What is their ID number?" 
+            },
+            {
+                type: "input",
+                name: "managerEmail",
+                message: "What is the managers email?" 
+            },
+            {
+                type: "input",
+                name: "managerOffice",
+                message: "What is the managers office number?" 
+            },
+        ]).then(function (data) {
+            const managerInfo = JSON.stringify(data);
+            const myManagerInfo = JSON.parse(managerInfo);
+            console.log(myManagerInfo);
+            nextQuestion();
+        })
+    }
+
+    // Engineer Questions
+    async function engineer() {
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "engineerName",
+                message: "What is the engineers name?"
+            },
+            {
+                type: "input",
+                name: "engineerID",
+                message: "What is their ID number?" 
+            },
+            {
+                type: "input",
+                name: "engineerEmail",
+                message: "What is the engineers email?" 
+            },
+            {
+                type: "input",
+                name: "engineerGithub",
+                message: "What is the engineers github username?" 
+            },
+        ]).then(function (data) {
+            const engineerInfo = JSON.stringify(data);
+            const myEngineerInfo = JSON.parse(engineerInfo);
+            console.log(myEngineerInfo);
+            nextQuestion();
+        })
+    }
+
+    // Intern Questions
+    async function intern() {
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "internName",
+                message: "What is the intern name?"
+            },
+            {
+                type: "input",
+                name: "internID",
+                message: "What is their ID number?" 
+            },
+            {
+                type: "input",
+                name: "internEmail",
+                message: "What is the interns email?" 
+            },
+            {
+                type: "input",
+                name: "internSchool",
+                message: "What is the interns school?" 
+            },
+        ]).then(function (data) {
+            const internInfo = JSON.stringify(data);
+            const myInternInfo = JSON.parse(internInfo);
+            console.log(myInternInfo);
+            nextQuestion();
+        })
+    }
+
+
+    async function getSome() {
+        askQuestions();
+    }
+    getSome();
 }
 
-async function makeItHappen() {
-    getInfo();
-
-}
-
-makeItHappen();
-
-
-// {
-//     type: "list",
-//     message: "Is there any more team members?",
-//     name: "employee",
-//     choices: [
-//         "Yes",
-//         "No"
-//     ]
-// },
-// {
-//     type: "input",
-//     name: "employeeId",
-//     message: "What is your employee ID?"
-// },
-// {
-//     type: "input"
-// }
-
+    
+    
+    heavyLoad();
+    
 
 
 // Write code to use inquirer to gather information about the development team members,
