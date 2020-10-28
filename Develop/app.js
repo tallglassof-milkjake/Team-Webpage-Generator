@@ -92,9 +92,10 @@ async function heavyLoad() {
                 message: "What is the managers office number?" 
             },
         ]).then(function (data) {
-            const managerInfo = JSON.stringify(data);
-            const myManagerInfo = JSON.parse(managerInfo);
-            console.log(myManagerInfo);
+            const managerDetail = new Manager(data.managerName, data.managerID, data.managerEmail, data.managerOffice);
+
+            console.log(managerDetail);
+
             nextQuestion();
         })
     }
