@@ -11,6 +11,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const { get } = require("http");
 
+const team = [];
+
 async function heavyLoad() {
 
 
@@ -53,15 +55,22 @@ async function heavyLoad() {
                     "That is all"
                 ]
             }
-        ]).then(async function selectRole(data) {
-            if (data.role === "Manager") {
-                manager();
-            } else if (data.role === "Engineer") {
-                engineer();
-            } else if (data.role === "Intern") {
-                intern();
-            }
-        });
+        ]).then(async (data) => {
+                if (data.role === "Manager") {
+                    manager();
+                } else if (data.role === "Engineer") {
+                    engineer();
+                } else if (data.role === "Intern") {
+                    intern();
+                } else if (data.role === "That is all") {
+                    console.log(team);
+                    fs.writeFile(outputPath, render(team), "utf8", function (err) {
+                        if (err)
+                            return err;
+                        console.log("Success! You've made a team.html file!");
+                    });
+                }
+            });
     }
     
     // Manager Questions
@@ -91,10 +100,13 @@ async function heavyLoad() {
             const managerInfo = new Manager(data.name, data.id, data.email, data.office);
 
             console.log(managerInfo);
+            team.push(managerInfo);
 
             nextQuestion();
-        })
-    }
+        }).catch(error => {
+            console.log(error);
+        });
+    };
 
     // Engineer Questions
     async function engineer() {
@@ -123,8 +135,11 @@ async function heavyLoad() {
             const engineerInfo = new Engineer(data.name, data.id, data.email, data.github);
 
             console.log(engineerInfo);
+            team.push(engineerInfo);
 
             nextQuestion();
+        }).catch(error => {
+            console.log(error);
         })
     }
 
@@ -155,23 +170,27 @@ async function heavyLoad() {
             const internInfo = new Intern(data.name, data.id, data.email, data.school);
             
             console.log(internInfo);
+            team.push(internInfo);
 
             nextQuestion();
-        })
+        }).catch(error => {
+            console.log(error);
+        }) 
     }
 
     async function getSome() {
         askQuestions();
     }
-    getSome();
     
-}
+    getSome();
+
 
     
+}
     
 heavyLoad();
-    
-render();
+
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
