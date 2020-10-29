@@ -63,13 +63,12 @@ async function heavyLoad() {
                 } else if (data.role === "Intern") {
                     intern();
                 } else if (data.role === "That is all") {
-                    console.log(team);
-                    fs.writeFile(outputPath, render(team), "utf8", function (err) {
-                        if (err)
-                            return err;
-                        console.log("Success! You've made a team.html file!");
-                    });
+
+                    getHTML()
+                    
                 }
+            }) .catch (error => {
+                return error;
             });
     }
     
@@ -184,6 +183,19 @@ async function heavyLoad() {
     
     getSome();
 
+    function getHTML() {
+
+        const myHTML = render(team);
+        console.log(myHTML);
+
+        fs.writeFile(outputPath, myHTML, function (err) {
+                        
+            if (err) return err;
+                
+            console.log("Success! You've made a team.html file!");
+                       
+        });
+    }
 
     
 }
