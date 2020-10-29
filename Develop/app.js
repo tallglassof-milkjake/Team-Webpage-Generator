@@ -11,10 +11,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const { get } = require("http");
 
-let myManagerInfo = {};
-let myEngineerInfo = {};
-let myInternInfo = {};
-
 async function heavyLoad() {
 
 
@@ -73,28 +69,28 @@ async function heavyLoad() {
         inquirer.prompt([
             {
                 type: "input",
-                name: "managerName",
+                name: "name",
                 message: "What is the managers name?"
             },
             {
                 type: "input",
-                name: "managerID",
+                name: "id",
                 message: "What is their ID number?" 
             },
             {
                 type: "input",
-                name: "managerEmail",
+                name: "email",
                 message: "What is the managers email?" 
             },
             {
                 type: "input",
-                name: "managerOffice",
+                name: "office",
                 message: "What is the managers office number?" 
             },
         ]).then(function (data) {
-            const managerDetail = new Manager(data.managerName, data.managerID, data.managerEmail, data.managerOffice);
+            const managerInfo = new Manager(data.name, data.id, data.email, data.office);
 
-            console.log(managerDetail);
+            console.log(managerInfo);
 
             nextQuestion();
         })
@@ -105,28 +101,29 @@ async function heavyLoad() {
         inquirer.prompt([
             {
                 type: "input",
-                name: "engineerName",
+                name: "name",
                 message: "What is the engineers name?"
             },
             {
                 type: "input",
-                name: "engineerID",
+                name: "id",
                 message: "What is their ID number?" 
             },
             {
                 type: "input",
-                name: "engineerEmail",
+                name: "email",
                 message: "What is the engineers email?" 
             },
             {
                 type: "input",
-                name: "engineerGithub",
+                name: "github",
                 message: "What is the engineers github username?" 
             },
         ]).then(function (data) {
-            const engineerInfo = JSON.stringify(data);
-            const myEngineerInfo = JSON.parse(engineerInfo);
-            console.log(myEngineerInfo);
+            const engineerInfo = new Engineer(data.name, data.id, data.email, data.github);
+
+            console.log(engineerInfo);
+
             nextQuestion();
         })
     }
@@ -136,28 +133,29 @@ async function heavyLoad() {
         inquirer.prompt([
             {
                 type: "input",
-                name: "internName",
+                name: "name",
                 message: "What is the intern name?"
             },
             {
                 type: "input",
-                name: "internID",
+                name: "id",
                 message: "What is their ID number?" 
             },
             {
                 type: "input",
-                name: "internEmail",
+                name: "email",
                 message: "What is the interns email?" 
             },
             {
                 type: "input",
-                name: "internSchool",
+                name: "school",
                 message: "What is the interns school?" 
             },
         ]).then(function (data) {
-            const internInfo = JSON.stringify(data);
-            const myInternInfo = JSON.parse(internInfo);
-            console.log(myInternInfo);
+            const internInfo = new Intern(data.name, data.id, data.email, data.school);
+            
+            console.log(internInfo);
+
             nextQuestion();
         })
     }
@@ -166,15 +164,14 @@ async function heavyLoad() {
         askQuestions();
     }
     getSome();
-
     
 }
 
     
     
-    heavyLoad();
+heavyLoad();
     
-
+render();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
