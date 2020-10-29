@@ -188,7 +188,7 @@ async function heavyLoad() {
         const myHTML = render(team);
         console.log(myHTML);
 
-        fs.writeFile(outputPath, myHTML, function (err) {
+        fs.writeFileSync(outputPath, myHTML, function (err) {
                         
             if (err) return err;
                 
