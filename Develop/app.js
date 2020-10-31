@@ -131,7 +131,9 @@ async function heavyLoad() {
                 message: "What is the engineers github username?" 
             },
         ]).then(function (data) {
-            const engineerInfo = new Engineer(data.name, data.id, data.email, data.github);
+            let github = `https://github.com/${data.github}`;
+
+            const engineerInfo = new Engineer(data.name, data.id, data.email, github);
 
             console.log(engineerInfo);
             team.push(engineerInfo);
