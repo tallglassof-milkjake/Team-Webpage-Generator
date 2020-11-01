@@ -2,6 +2,7 @@ const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
+const colors = require("colors");
 const path = require("path");
 const fs = require("fs");
 
@@ -14,7 +15,7 @@ const { get } = require("http");
 const team = [];
 
 
-async function heavyLoad() {
+async function teamGenerator() {
 
     // Initial prompt (Which team member)
     function askQuestions() {
@@ -38,7 +39,7 @@ async function heavyLoad() {
                 intern();
             }
         });
-    }
+    };
 
     // Prompt asking if more employees
     function nextQuestion() {
@@ -62,14 +63,12 @@ async function heavyLoad() {
                 } else if (data.role === "Intern") {
                     intern();
                 } else if (data.role === "That is all") {
-
                     getHTML()
-                    
                 }
             }) .catch (error => {
                 return error;
             });
-    }
+    };
     
     // Manager Questions
     async function manager() {
@@ -100,11 +99,9 @@ async function heavyLoad() {
             },
         ]).then(function (data) {
             const managerInfo = new Manager(data.name, data.id, data.email, data.office);
-
-            console.log(managerInfo);
             team.push(managerInfo);
-
             nextQuestion();
+
         }).catch(error => {
             console.log(error);
         });
@@ -119,39 +116,37 @@ async function heavyLoad() {
                 type: "input",
                 name: "name",
                 message: "What is the engineers name?",
-                validate: validate
+                validate: validateString
             },
             {
                 type: "input",
                 name: "id",
                 message: "What is their ID number?",
-                validate: validate
+                validate: validateInteger
             },
             {
                 type: "input",
                 name: "email",
                 message: "What is the engineers email?",
-                validate: validate
+                validate: validateEmail
             },
             {
                 type: "input",
                 name: "github",
                 message: "What is the engineers github username?",
-                validate: validate
+                validate: validateString
             },
         ]).then(function (data) {
             let github = `https://github.com/${data.github}`;
 
             const engineerInfo = new Engineer(data.name, data.id, data.email, github);
-
-            console.log(engineerInfo);
             team.push(engineerInfo);
-
             nextQuestion();
+
         }).catch(error => {
             console.log(error);
-        })
-    }
+        });
+    };
 
     // Intern Questions
     async function intern() {
@@ -160,69 +155,61 @@ async function heavyLoad() {
                 type: "input",
                 name: "name",
                 message: "What is the intern name?",
-                validate: validate
+                validate: validateString
             },
             {
                 type: "input",
                 name: "id",
                 message: "What is their ID number?",
-                validate: validate
+                validate: validateInteger
             },
             {
                 type: "input",
                 name: "email",
                 message: "What is the interns email?",
-                validate: validate
+                validate: validateEmail
             },
             {
                 type: "input",
                 name: "school",
                 message: "What is the interns school?",
-                validate: validate
+                validate: validateString
             },
         ]).then(function (data) {
             const internInfo = new Intern(data.name, data.id, data.email, data.school);
-            
-            console.log(internInfo);
             team.push(internInfo);
-
             nextQuestion();
+
         }).catch(error => {
             console.log(error);
-        }) 
-    }
+        });
+    };
 
-    async function getSome() {
+    async function startQuestions() {
         askQuestions();
-    }
+    };
     
-    getSome();
+    startQuestions();
 
+    // Get object and write to HTML
     function getHTML() {
-
         const myHTML = render(team);
-        console.log(myHTML);
 
         fs.writeFileSync(outputPath, myHTML, function (err) {
-                        
             if (err) return err;
                 
             console.log("Success! You've made a team.html file!");
-                       
         });
-    }
-
-    // /[a-zA-Z_]\w*/
-    // /^[A-Za-z\s]/
-    // /^[A-Za-z]\s\w*/
+    };
     
     // Validation Functions
     function validateString(answer) {
         const regEx = /[A-Za-z]/;
         const result = regEx.test(answer);
-
+        const errorMessage = "That's not a real name".red;
+        
         if (result == false) {
-            return "Not a valid input";
+            return errorMessage;
         }
         return result;
     };
@@ -230,9 +217,10 @@ async function heavyLoad() {
     function validateInteger(answer) {
         const regEx = /[0-9]/;
         const result = regEx.test(answer);
+        const errorMessage = "Please enter only numbers".red;
 
         if (result == false) {
-            return "Please enter only numbers";
+            return errorMessage;
         }
         return result;
     };
@@ -240,38 +228,14 @@ async function heavyLoad() {
     function validateEmail(answer) {
         const regEx = /[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@+[a-zA-Z0-9-]+.+[a-zA-Z]/;
         const result = regEx.test(answer);
+        const errorMessage = "Please enter a valid email format".red;
 
         if (result == false) {
-            return "Please enter a valid email format";
+            return errorMessage;
         }
         return result;
     };
     
 }
     
-heavyLoad();
-
-
-
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+teamGenerator();
