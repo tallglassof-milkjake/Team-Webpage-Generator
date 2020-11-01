@@ -13,9 +13,8 @@ const { get } = require("http");
 
 const team = [];
 
+
 async function heavyLoad() {
-
-
 
     // Initial prompt (Which team member)
     function askQuestions() {
@@ -78,22 +77,26 @@ async function heavyLoad() {
             {
                 type: "input",
                 name: "name",
-                message: "What is the managers name?"
+                message: "What is the managers name?",
+                validate: validateString,
             },
             {
                 type: "input",
                 name: "id",
-                message: "What is their ID number?" 
+                message: "What is their ID number?",
+                validate: validateInteger
             },
             {
                 type: "input",
                 name: "email",
-                message: "What is the managers email?" 
+                message: "What is the managers email?",
+                validate: validateEmail
             },
             {
                 type: "input",
                 name: "office",
-                message: "What is the managers office number?" 
+                message: "What is the managers office number?",
+                validate: validateInteger
             },
         ]).then(function (data) {
             const managerInfo = new Manager(data.name, data.id, data.email, data.office);
@@ -107,28 +110,34 @@ async function heavyLoad() {
         });
     };
 
+    
+
     // Engineer Questions
     async function engineer() {
         inquirer.prompt([
             {
                 type: "input",
                 name: "name",
-                message: "What is the engineers name?"
+                message: "What is the engineers name?",
+                validate: validate
             },
             {
                 type: "input",
                 name: "id",
-                message: "What is their ID number?" 
+                message: "What is their ID number?",
+                validate: validate
             },
             {
                 type: "input",
                 name: "email",
-                message: "What is the engineers email?" 
+                message: "What is the engineers email?",
+                validate: validate
             },
             {
                 type: "input",
                 name: "github",
-                message: "What is the engineers github username?" 
+                message: "What is the engineers github username?",
+                validate: validate
             },
         ]).then(function (data) {
             let github = `https://github.com/${data.github}`;
@@ -150,22 +159,26 @@ async function heavyLoad() {
             {
                 type: "input",
                 name: "name",
-                message: "What is the intern name?"
+                message: "What is the intern name?",
+                validate: validate
             },
             {
                 type: "input",
                 name: "id",
-                message: "What is their ID number?" 
+                message: "What is their ID number?",
+                validate: validate
             },
             {
                 type: "input",
                 name: "email",
-                message: "What is the interns email?" 
+                message: "What is the interns email?",
+                validate: validate
             },
             {
                 type: "input",
                 name: "school",
-                message: "What is the interns school?" 
+                message: "What is the interns school?",
+                validate: validate
             },
         ]).then(function (data) {
             const internInfo = new Intern(data.name, data.id, data.email, data.school);
@@ -199,6 +212,40 @@ async function heavyLoad() {
         });
     }
 
+    // /[a-zA-Z_]\w*/
+    // /^[A-Za-z\s]/
+    // /^[A-Za-z]\s\w*/
+    
+    // Validation Functions
+    function validateString(answer) {
+        const regEx = /[A-Za-z]/;
+        const result = regEx.test(answer);
+
+        if (result == false) {
+            return "Not a valid input";
+        }
+        return result;
+    };
+
+    function validateInteger(answer) {
+        const regEx = /[0-9]/;
+        const result = regEx.test(answer);
+
+        if (result == false) {
+            return "Please enter only numbers";
+        }
+        return result;
+    };
+
+    function validateEmail(answer) {
+        const regEx = /[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@+[a-zA-Z0-9-]+.+[a-zA-Z]/;
+        const result = regEx.test(answer);
+
+        if (result == false) {
+            return "Please enter a valid email format";
+        }
+        return result;
+    };
     
 }
     
