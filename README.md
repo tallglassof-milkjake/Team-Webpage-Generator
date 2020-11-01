@@ -6,6 +6,8 @@
 
 * **[Description](#Description)**
 
+* **[Screenshots](#Screenshots)**
+
 * **[Installation](#Installation)**
 
 * **[Constributions](#Contributions)**
@@ -18,6 +20,19 @@
 ### Description
 
 A nice easy to use application that takes input in the command line and creates an html file of all the current employees within a project. Using regular expression validation on inputs to ensure no one enters data incorectly. Also ensuring github usernames are linked correctly it includes the url so all that needs to be entered is the username. 
+
+
+### Screenshots
+
+![GIF of app in action](/Assets/teamWebpageBuilder.gif)
+
+![Validating Strings](/Assets/stringValidator.png)
+
+![Validating Numbers](/Assets/numberValidator.png)
+
+![Email Validator](/Assets/emailValidator.png)
+
+![Final Product in Browser](/Assets/resultBrowser.png)
 
 
 ### Installation
